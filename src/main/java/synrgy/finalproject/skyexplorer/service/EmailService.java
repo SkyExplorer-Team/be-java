@@ -18,4 +18,12 @@ public class EmailService {
         message.setText(body);
         javaMailSender.send(message);
     }
+
+    public void sendResetPasswordEmail(String to, String resetPasswordToken) {
+        String subject = "Reset Password";
+        String body = "Click the link below to reset your password:\n"
+                + "http://localhost:8080/api/users/reset-password?token=" + resetPasswordToken;
+
+        sendEmail(to, subject, body);
+    }
 }

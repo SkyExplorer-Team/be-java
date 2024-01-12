@@ -34,8 +34,6 @@ public class Users extends AuditModel {
     private String lastName;
 
     @Size(min = 8, message = "Username must have at least 8 characters")
-    @Pattern(regexp = "^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d]{8,}$",
-            message = "Password must contain at least one letter and one digit")
     private String password;
 
     @NotBlank(message = "Salutation cannot be blank")
@@ -68,7 +66,9 @@ public class Users extends AuditModel {
 
     private boolean isRegistrationComplete;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    private String resetPasswordToken;
+
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "role_id")
     private Role role;
 

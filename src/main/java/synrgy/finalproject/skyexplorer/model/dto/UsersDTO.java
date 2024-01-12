@@ -26,8 +26,9 @@ public class UsersDTO {
     private LocalDateTime otpExpireTime;
     private boolean isOTPVerified;
     private boolean isRegistrationComplete;
+    private String resetPasswordToken;
 
-    public UsersDTO(String fistName, String lastName, String password, String salutation, String email, String national, LocalDate dob, String phone, boolean subscribe, String otpCode, LocalDateTime otpExpireTime, boolean isOTPVerified, boolean isRegistrationComplete) {
+    public UsersDTO(String fistName, String lastName, String password, String salutation, String email, String national, LocalDate dob, String phone, boolean subscribe, String otpCode, LocalDateTime otpExpireTime, boolean isOTPVerified, boolean isRegistrationComplete, String resetPasswordToken) {
         this.fistName = fistName;
         this.lastName = lastName;
         this.password = password;
@@ -41,5 +42,6 @@ public class UsersDTO {
         this.otpExpireTime = otpExpireTime;
         this.isOTPVerified = isOTPVerified;
         this.isRegistrationComplete = isRegistrationComplete;
+        this.resetPasswordToken = resetPasswordToken;
     }
 }

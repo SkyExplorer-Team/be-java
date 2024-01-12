@@ -1,6 +1,7 @@
 package synrgy.finalproject.skyexplorer.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import synrgy.finalproject.skyexplorer.model.dto.UsersDTO;
 import synrgy.finalproject.skyexplorer.model.entity.Role;
@@ -22,6 +23,9 @@ public class UsersService {
     @Autowired
     private EmailService emailService;
 
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
 
     public Users saveUser(UsersDTO usersDTO) {
         if (usersDTO.getEmail() == null) {
@@ -29,13 +33,18 @@ public class UsersService {
         }
 
         Users existingUser = usersRepository.findByEmail(usersDTO.getEmail());
-        if (existingUser != null && !existingUser.isRegistrationComplete()) {
+        if (existingUser != null) {
+            if (existingUser.isRegistrationComplete()) {
+                // User with this email is already registered and registration is complete
+                throw new IllegalArgumentException("User with this email is already registered and registration is complete.");
+            }
+
             Users updatedUser = convertDTOToEntity(usersDTO, null, existingUser.getOtpCode(), existingUser.getOtpExpireTime());
             updatedUser.setId(existingUser.getId());
 
             updatedUser.setOTPVerified(existingUser.isOTPVerified());
             updatedUser.setRole(existingUser.getRole());
-            updatedUser.setRegistrationComplete(false);
+            updatedUser.setRegistrationComplete(existingUser.isRegistrationComplete());
 
             usersRepository.save(updatedUser);
             return updatedUser;
@@ -62,8 +71,8 @@ public class UsersService {
         return newUser;
     }
 
-    public boolean verifyOTP(Users user, String enteredOTP) {
-        if (user.getOtpCode().equals(enteredOTP) && LocalDateTime.now().isBefore(user.getOtpExpireTime())) {
+    public boolean verifyOTP(Users user, String otpCode) {
+        if (user.getOtpCode().equals(otpCode) && LocalDateTime.now().isBefore(user.getOtpExpireTime())) {
             user.setOTPVerified(true);
             usersRepository.save(user);
             return true;
@@ -120,7 +129,9 @@ public class UsersService {
     public Users setPassword(String email, String password) {
         Users user = usersRepository.findByEmail(email);
         if (user != null && user.isOTPVerified()) {
-            user.setPassword(password);
+            String encodedPassword = passwordEncoder.encode(password);
+            user.setPassword(encodedPassword);
+
             user.setRegistrationComplete(true);
             return usersRepository.save(user);
         }
