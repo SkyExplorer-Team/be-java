@@ -2,5 +2,5 @@ package synrgy.finalproject.skyexplorer.model.dto.response;
 
 import java.util.HashMap;
 
-public record FailResponse(String status, HashMap<String, String> data){
+public record ResponseDto(String status, HashMap<String, ?> data){
 }
