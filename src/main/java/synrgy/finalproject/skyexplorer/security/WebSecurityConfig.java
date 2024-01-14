@@ -39,7 +39,7 @@ public class WebSecurityConfig {
                         .requestMatchers("/api/users/reset-password").permitAll()
                         .requestMatchers("/api/users/login").permitAll()
                         .requestMatchers(request -> "/api/users/register".equals(request.getServletPath())).permitAll()
-                        .anyRequest().authenticated()
+                        .anyRequest().permitAll()
                 ).formLogin(Customizer.withDefaults());
 
         http.authenticationProvider(authenticationProvider());
