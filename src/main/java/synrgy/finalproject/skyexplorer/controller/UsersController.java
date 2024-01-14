@@ -18,6 +18,7 @@ import synrgy.finalproject.skyexplorer.model.dto.request.LoginRequest;
 import synrgy.finalproject.skyexplorer.model.dto.response.JwtResponse;
 import synrgy.finalproject.skyexplorer.model.dto.response.SuccessResponse;
 import synrgy.finalproject.skyexplorer.model.entity.Users;
+import synrgy.finalproject.skyexplorer.model.provider.AuthProvider;
 import synrgy.finalproject.skyexplorer.security.jwt.JwtUtils;
 import synrgy.finalproject.skyexplorer.security.service.UserDetailsImpl;
 import synrgy.finalproject.skyexplorer.security.service.UserDetailsServiceImpl;
@@ -28,7 +29,7 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/api/users")
+@RequestMapping("/users")
 public class UsersController {
 
     @Autowired
@@ -49,6 +50,7 @@ public class UsersController {
     @PostMapping("/register")
     public ResponseEntity<Object> registerBasic(@Valid @RequestBody UsersDTO usersDTO) {
         try {
+            usersDTO.setAuthProvider(AuthProvider.local);
             Users savedUser = usersService.saveUser(usersDTO);
             if (savedUser != null) {
                 usersService.sendOTPEmail(savedUser.getEmail());
@@ -124,7 +126,7 @@ public class UsersController {
     public ResponseEntity<Object> requestResetPassword(@RequestBody UsersDTO usersDTO) {
         String email = usersDTO.getEmail();
         try {
-            resetPasswordService.updateRessetPassword(email);
+            resetPasswordService.updateResetPassword(email);
             return SuccessResponse.generateResponse("succes", "Link reset password telah dikirim ke email Anda. Silakan periksa inbox Anda.", email, HttpStatus.OK);
         } catch (UsersNotFoundException e) {
             return SuccessResponse.generateResponse("error", e.getMessage(), null, HttpStatus.INTERNAL_SERVER_ERROR);

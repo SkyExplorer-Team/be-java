@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.Accessors;
+import synrgy.finalproject.skyexplorer.model.provider.AuthProvider;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -27,8 +28,10 @@ public class UsersDTO {
     private boolean isOTPVerified;
     private boolean isRegistrationComplete;
     private String resetPasswordToken;
+    private AuthProvider authProvider;
+    private String providerId;
 
-    public UsersDTO(String fistName, String lastName, String password, String salutation, String email, String national, LocalDate dob, String phone, boolean subscribe, String otpCode, LocalDateTime otpExpireTime, boolean isOTPVerified, boolean isRegistrationComplete, String resetPasswordToken) {
+    public UsersDTO(String fistName, String lastName, String password, String salutation, String email, String national, LocalDate dob, String phone, boolean subscribe, String otpCode, LocalDateTime otpExpireTime, boolean isOTPVerified, boolean isRegistrationComplete, String resetPasswordToken, AuthProvider authProvider, String providerId) {
         this.fistName = fistName;
         this.lastName = lastName;
         this.password = password;
@@ -43,5 +46,8 @@ public class UsersDTO {
         this.isOTPVerified = isOTPVerified;
         this.isRegistrationComplete = isRegistrationComplete;
         this.resetPasswordToken = resetPasswordToken;
+        this.authProvider = authProvider;
+        this.providerId = "testeing";
+
     }
 }

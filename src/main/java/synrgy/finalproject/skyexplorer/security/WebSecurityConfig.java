@@ -1,5 +1,6 @@
 package synrgy.finalproject.skyexplorer.security;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -16,12 +17,16 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import synrgy.finalproject.skyexplorer.config.CustomFailHandler;
+import synrgy.finalproject.skyexplorer.config.CustomOAuth2UserService;
+import synrgy.finalproject.skyexplorer.config.CustomSuccessHandler;
 import synrgy.finalproject.skyexplorer.security.jwt.AuthEntryPointJwt;
 import synrgy.finalproject.skyexplorer.security.jwt.AuthTokenFilter;
 import synrgy.finalproject.skyexplorer.security.service.UserDetailsServiceImpl;
 
 @Configuration
 @EnableWebSecurity
+@Slf4j
 public class WebSecurityConfig {
     @Autowired
     private AuthEntryPointJwt unauthorizedHandler;
@@ -29,18 +34,42 @@ public class WebSecurityConfig {
     @Autowired
     private UserDetailsServiceImpl userDetailsService;
 
+    @Autowired
+    CustomSuccessHandler successHandler;
+    @Autowired
+    CustomFailHandler failHandler;
+    @Autowired
+    CustomOAuth2UserService customOAuth2UserService ;
+
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception{
         http
                 .csrf(csrf -> csrf.disable())
                 .exceptionHandling(exception -> exception.authenticationEntryPoint(unauthorizedHandler))
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .authorizeRequests (auth -> auth.requestMatchers("api/users/**").permitAll()
-                        .requestMatchers("/api/users/reset-password").permitAll()
-                        .requestMatchers("/api/users/login").permitAll()
-                        .requestMatchers(request -> "/api/users/register".equals(request.getServletPath())).permitAll()
+                .authorizeRequests (auth ->
+                        auth
+                                .requestMatchers("/users/login").permitAll()
+                                .requestMatchers("/users/reset-password").permitAll()
+                                .requestMatchers("/callback").permitAll()
+                                .requestMatchers("/users/**").permitAll()
+                                .requestMatchers("/swagger-ui/**").permitAll()
+                                .requestMatchers("/docs.html").permitAll()
+                                .requestMatchers("/my-api/**").permitAll()
+                                .requestMatchers("/auth/**").permitAll()
+                                .requestMatchers("/oauth2/**").permitAll()
+                                .requestMatchers("/users/register").permitAll()
+                        .requestMatchers(request -> "/users/register".equals(request.getServletPath())).permitAll()
                         .anyRequest().authenticated()
-                ).formLogin(Customizer.withDefaults());
+                ).formLogin(Customizer.withDefaults())
+                .oauth2Login( oauth2 -> oauth2
+                        .loginPage("/oauth2/authorization/google").permitAll()
+                        .successHandler(successHandler)
+                        .failureHandler(failHandler)
+                        .userInfoEndpoint(userInfo -> userInfo.userService(customOAuth2UserService))
+                        .defaultSuccessUrl("/callback")
+                );
+
 
         http.authenticationProvider(authenticationProvider());
         http.addFilterBefore(authJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);
@@ -61,8 +90,6 @@ public class WebSecurityConfig {
         authenticationProvider.setUserDetailsService(userDetailsService);
 
         authenticationProvider.setPostAuthenticationChecks(new NoopPostAuthenticationChecks());
-
-
         return authenticationProvider;
     }
 
@@ -70,6 +97,7 @@ public class WebSecurityConfig {
     public AuthTokenFilter authJwtTokenFilter(){
         return new AuthTokenFilter();
     }
+
 
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration)

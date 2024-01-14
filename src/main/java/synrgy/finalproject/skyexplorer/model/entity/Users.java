@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.Accessors;
+import synrgy.finalproject.skyexplorer.model.provider.AuthProvider;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -33,7 +34,7 @@ public class Users extends AuditModel {
     @Size(min = 1, message = "lastName must have at least 1 characters")
     private String lastName;
 
-    @Size(min = 8, message = "Username must have at least 8 characters")
+    @Size(min = 8, message = "Password must have at least 8 characters")
     private String password;
 
     @NotBlank(message = "Salutation cannot be blank")
@@ -68,6 +69,13 @@ public class Users extends AuditModel {
 
     private String resetPasswordToken;
 
+    private String imageUrl;
+
+//    @NotNull
+    @Enumerated(EnumType.STRING)
+    private AuthProvider provider;
+
+    private String providerId;
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "role_id")
     private Role role;
