@@ -10,6 +10,7 @@ import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsChecker;
@@ -35,15 +36,18 @@ public class WebSecurityConfig {
     private UserDetailsServiceImpl userDetailsService;
 
     @Autowired
-    CustomSuccessHandler successHandler;
+    private CustomSuccessHandler successHandler;
+
     @Autowired
-    CustomFailHandler failHandler;
+    private CustomFailHandler failHandler;
+
     @Autowired
-    CustomOAuth2UserService customOAuth2UserService ;
+    private CustomOAuth2UserService customOAuth2UserService ;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception{
         http
+                .csrf(AbstractHttpConfigurer::disable)
                 .csrf(csrf -> csrf.disable())
                 .exceptionHandling(exception -> exception.authenticationEntryPoint(unauthorizedHandler))
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
@@ -51,23 +55,26 @@ public class WebSecurityConfig {
                         auth
                                 .requestMatchers("/users/login").permitAll()
                                 .requestMatchers("/users/reset-password").permitAll()
-                                .requestMatchers("/callback").permitAll()
+//                                .requestMatchers("/callback").permitAll()
                                 .requestMatchers("/users/**").permitAll()
                                 .requestMatchers("/swagger-ui/**").permitAll()
                                 .requestMatchers("/docs.html").permitAll()
                                 .requestMatchers("/my-api/**").permitAll()
                                 .requestMatchers("/auth/**").permitAll()
-                                .requestMatchers("/oauth2/**").permitAll()
+//                                .requestMatchers("/oauth2/**").permitAll()
                                 .requestMatchers("/users/register").permitAll()
+                                .requestMatchers("/auth/**").permitAll()
                         .requestMatchers(request -> "/users/register".equals(request.getServletPath())).permitAll()
                         .anyRequest().authenticated()
                 ).formLogin(Customizer.withDefaults())
                 .oauth2Login( oauth2 -> oauth2
-                        .loginPage("/oauth2/authorization/google").permitAll()
+//                        .loginPage("/oauth2/authorization/google").permitAll()
+                        .authorizationEndpoint(a -> a.baseUri("/oauth2/authorize"))
+                        .redirectionEndpoint(redirect -> redirect.baseUri("/oauth2/callback/*"))
+                        .userInfoEndpoint(userInfo -> userInfo.userService(customOAuth2UserService))
                         .successHandler(successHandler)
                         .failureHandler(failHandler)
-                        .userInfoEndpoint(userInfo -> userInfo.userService(customOAuth2UserService))
-                        .defaultSuccessUrl("/callback")
+//                        .defaultSuccessUrl("/callback")
                 );
 
 

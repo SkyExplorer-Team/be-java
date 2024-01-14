@@ -4,6 +4,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.coyote.BadRequestException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -18,19 +19,20 @@ import org.springframework.security.web.authentication.AuthenticationSuccessHand
 import org.springframework.security.web.authentication.SavedRequestAwareAuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
+import org.springframework.web.util.UriComponentsBuilder;
 import synrgy.finalproject.skyexplorer.model.dto.UsersDTO;
 import synrgy.finalproject.skyexplorer.model.entity.Role;
 import synrgy.finalproject.skyexplorer.model.entity.Users;
 import synrgy.finalproject.skyexplorer.model.provider.AuthProvider;
 import synrgy.finalproject.skyexplorer.repository.UsersRepository;
+import synrgy.finalproject.skyexplorer.security.jwt.JwtUtils;
 import synrgy.finalproject.skyexplorer.security.service.UserDetailsServiceImpl;
 
 import java.io.IOException;
-import java.util.Date;
+import java.util.*;
 import java.time.LocalDate;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import jakarta.servlet.http.Cookie;
+import synrgy.finalproject.skyexplorer.utils.CookieUtils;
 
 @Component
 @Slf4j
@@ -41,6 +43,9 @@ public class CustomSuccessHandler extends SavedRequestAwareAuthenticationSuccess
 
     @Autowired
     UserDetailsServiceImpl userDetailsService;
+
+    @Autowired
+    private JwtUtils jwtUtils;
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
@@ -71,10 +76,10 @@ public class CustomSuccessHandler extends SavedRequestAwareAuthenticationSuccess
                 usersRepository.save(user);
 //                UsernamePasswordAuthenticationToken authenticationToken =
 //                        new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
-
-                DefaultOAuth2User newuser = new DefaultOAuth2User(List.of(new SimpleGrantedAuthority("ROLE_USER")), attibutes,"sub");
-                Authentication auth = new OAuth2AuthenticationToken(newuser, List.of(new SimpleGrantedAuthority("ROLE_USER")), "google");
-                SecurityContextHolder.getContext().setAuthentication(auth);
+//   coment dulu
+//                DefaultOAuth2User newuser = new DefaultOAuth2User(List.of(new SimpleGrantedAuthority("ROLE_USER")), attibutes,"sub");
+//                Authentication auth = new OAuth2AuthenticationToken(newuser, List.of(new SimpleGrantedAuthority("ROLE_USER")), "google");
+//                SecurityContextHolder.getContext().setAuthentication(auth);
             } else{
 //                UserDetails userDetails = userDetailsService.loadUserByUsername(email);
 //                Users user = new Users();
@@ -82,16 +87,46 @@ public class CustomSuccessHandler extends SavedRequestAwareAuthenticationSuccess
 //                        attibutes,"sub");
 //                Authentication auth = new OAuth2AuthenticationToken(newuser, List.of(new SimpleGrantedAuthority("ROLE_USER")), "google");
 //                SecurityContextHolder.getContext().setAuthentication(auth);
-
-                UserDetails userDetails = userDetailsService.loadUserByUsername(email);
-                UsernamePasswordAuthenticationToken authenticated = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
-                authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-                SecurityContextHolder.getContext().setAuthentication(authenticated);
+//                    coment dulu
+//                UserDetails userDetails = userDetailsService.loadUserByUsername(email);
+//                UsernamePasswordAuthenticationToken authenticated = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+//                authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+//                SecurityContextHolder.getContext().setAuthentication(authenticated);
             }
-            this.setAlwaysUseDefaultTargetUrl(true);
-            this.setDefaultTargetUrl("http://localhost:8080/api/callback");
-            this.onAuthenticationSuccess(request, response, authentication);
+            String targetUrl = determineTargetUrl(request, response, email);
+            if (response.isCommitted()) {
+                logger.debug("Response has already been committed. Unable to redirect to " + targetUrl);
+                return;
+            }
+
+            getRedirectStrategy().sendRedirect(request, response, targetUrl);
+//            this.setAlwaysUseDefaultTargetUrl(true);
+//            this.setDefaultTargetUrl("http://localhost:8080/api/callback");
+//            this.onAuthenticationSuccess(request, response, authentication);
         }
+    }
+
+    protected String determineTargetUrl(HttpServletRequest request, HttpServletResponse response, String email) {
+//    protected String determineTargetUrl(HttpServletRequest request, HttpServletResponse response, Authentication authentication) {
+//        Optional<String> redirectUri = CookieUtils.getCookie(request, "redirect_uri")
+//                .map(Cookie::getValue);
+
+//        if(redirectUri.isPresent() && !isAuthorizedRedirectUri(redirectUri.get())) {
+//            try {
+//                throw new BadRequestException("Sorry! We've got an Unauthorized Redirect URI and can't proceed with the authentication");
+//            } catch (BadRequestException e) {
+//                throw new RuntimeException(e);
+//            }
+//        }
+
+//        String targetUrl = redirectUri.orElse(getDefaultTargetUrl());
+
+//        String token = jwtUtils.generateToken(authentication);
+        String token = jwtUtils.generateToken(email);
+        System.out.println("here==============");
+        return UriComponentsBuilder.fromUriString("http://localhost:3000/oauth2/redirect")
+                .queryParam("token", token)
+                .build().toUriString();
     }
 
 //    @Override
