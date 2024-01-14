@@ -5,12 +5,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
-import synrgy.finalproject.skyexplorer.model.dto.response.FailResponse;
+import synrgy.finalproject.skyexplorer.model.dto.response.ResponseDto;
 
-import java.time.LocalDateTime;
-import java.util.Collections;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
-import synrgy.finalproject.skyexplorer.model.dto.response.FailResponse;
 
 import java.util.HashMap;
 
@@ -21,21 +18,21 @@ public class CustomizedResponseExceptionHandler extends ResponseEntityExceptionH
     public final ResponseEntity<Object> handleEmailAlreadyExistException(Exception ex, WebRequest request) throws Exception {
         HashMap<String, String> resp = new HashMap<>();
         resp.put("data", ex.getMessage());
-        return new ResponseEntity<>(new FailResponse("fail", resp), HttpStatus.CONFLICT);
+        return new ResponseEntity<>(new ResponseDto("fail", resp), HttpStatus.CONFLICT);
     }
 
     @ExceptionHandler(EmailUnregisterException.class)
     public final ResponseEntity<Object> handleEmailUnregisterException(Exception ex, WebRequest request) throws Exception {
         HashMap<String, String> resp = new HashMap<>();
         resp.put("data", ex.getMessage());
-        return new ResponseEntity<>(new FailResponse("fail", resp), HttpStatus.CONFLICT);
+        return new ResponseEntity<>(new ResponseDto("fail", resp), HttpStatus.CONFLICT);
     }
 
     @ExceptionHandler(WrongPasswordException.class)
     public final ResponseEntity<Object> handleWrongPasswordException(Exception ex, WebRequest request) throws Exception {
         HashMap<String, String> resp = new HashMap<>();
         resp.put("data", ex.getMessage());
-        return new ResponseEntity<>(new FailResponse("fail", resp), HttpStatus.CONFLICT);
+        return new ResponseEntity<>(new ResponseDto("fail", resp), HttpStatus.CONFLICT);
     }
 
 

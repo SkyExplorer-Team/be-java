@@ -5,6 +5,7 @@ import jakarta.validation.constraints.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 import lombok.experimental.Accessors;
 import synrgy.finalproject.skyexplorer.model.provider.AuthProvider;
 
@@ -14,6 +15,7 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 
+@ToString
 @Getter
 @Setter
 @NoArgsConstructor

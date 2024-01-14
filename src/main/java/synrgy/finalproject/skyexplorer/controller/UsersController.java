@@ -109,10 +109,7 @@ public class UsersController {
                 String role = user.getRole().getName();
                 UserDetails userDetails = userDetailsService.loadUserByUsername(email);
                 String token = jwtUtils.generateToken(new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities()));
-
-
                 JwtResponse jwtResponse = new JwtResponse(token, email, role);
-
                 return SuccessResponse.generateResponse("succes", "Password set successfully. Registration completed.", jwtResponse, HttpStatus.OK);
             } else {
                 return SuccessResponse.generateResponse("fail", "Failed to set password or user not found.", null, HttpStatus.BAD_REQUEST);

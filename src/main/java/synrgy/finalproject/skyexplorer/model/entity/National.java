@@ -1,10 +1,9 @@
 package synrgy.finalproject.skyexplorer.model.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.List;
 import java.util.UUID;
@@ -12,6 +11,8 @@ import java.util.UUID;
 @Getter
 @Setter
 @NoArgsConstructor
+@AllArgsConstructor
+@Builder
 @Entity
 @Table(name = "national")
 public class National {
@@ -22,6 +23,7 @@ public class National {
     @NotNull
     private String name;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "national")
     private List<Airport> airports;
 }

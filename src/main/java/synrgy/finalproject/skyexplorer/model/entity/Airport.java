@@ -1,5 +1,6 @@
 package synrgy.finalproject.skyexplorer.model.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
@@ -18,6 +19,7 @@ public class Airport {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
     @NotNull
+    @JsonIgnore
     @ManyToOne
     private National national;
     @NotNull
