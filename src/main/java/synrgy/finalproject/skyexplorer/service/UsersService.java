@@ -161,16 +161,26 @@ public class UsersService {
 
     private Users convertDTOToEntity(UsersDTO usersDTO, String password, String otpCode, LocalDateTime otpExpireTime) {
         Users user = new Users(
-                usersDTO.getFistName(),
-                usersDTO.getLastName(),
-                password,
-                usersDTO.getSalutation(),
-                usersDTO.getEmail(),
-                usersDTO.getNational(),
-                usersDTO.getDob(),
-                usersDTO.getPhone(),
-                usersDTO.isSubscribe()
+//                usersDTO.getFistName(),
+//                usersDTO.getLastName(),
+//                password,
+//                usersDTO.getSalutation(),
+//                usersDTO.getEmail(),
+//                usersDTO.getNational(),
+//                usersDTO.getDob(),
+//                usersDTO.getPhone(),
+//                usersDTO.isSubscribe()
         );
+        user.setFirstName(usersDTO.getFistName());
+        user.setLastName(usersDTO.getLastName());
+//        user.setPassword(usersDTO.getPassword());
+        user.setPassword(password);
+        user.setSalutation(usersDTO.getSalutation());
+        user.setEmail(usersDTO.getEmail());
+        user.setNational(usersDTO.getNational());
+        user.setDob(usersDTO.getDob());
+        user.setPhone(usersDTO.getPhone());
+        user.setSubscribe(user.isSubscribe());
 
         user.setOtpCode(otpCode);
         user.setOtpExpireTime(otpExpireTime);

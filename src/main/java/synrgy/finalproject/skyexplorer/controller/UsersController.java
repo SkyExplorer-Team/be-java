@@ -115,7 +115,7 @@ public class UsersController {
                 return SuccessResponse.generateResponse("fail", "Failed to set password or user not found.", null, HttpStatus.BAD_REQUEST);
             }
         } catch (Exception e) {
-            return SuccessResponse.generateResponse("error", e.getMessage(), null, HttpStatus.INTERNAL_SERVER_ERROR);
+           return SuccessResponse.generateResponse("error", e.getMessage(), null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 

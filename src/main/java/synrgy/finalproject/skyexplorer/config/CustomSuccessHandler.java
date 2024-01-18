@@ -64,7 +64,7 @@ public class CustomSuccessHandler extends SavedRequestAwareAuthenticationSuccess
                 user.setEmail(email);
                 user.setPassword("password");
                 user.setSalutation("testing");
-                user.setFistName(name);
+                user.setFirstName(name);
                 user.setLastName(familyName);
                 user.setPhone("080000000000");
                 user.setDob(LocalDate.now());

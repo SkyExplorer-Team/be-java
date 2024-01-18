@@ -1,16 +1,18 @@
 package synrgy.finalproject.skyexplorer.model.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 import lombok.experimental.Accessors;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+import org.springframework.data.annotation.CreatedDate;
 import synrgy.finalproject.skyexplorer.model.provider.AuthProvider;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
@@ -19,6 +21,7 @@ import java.util.UUID;
 @Getter
 @Setter
 @NoArgsConstructor
+@AllArgsConstructor
 @Accessors(chain = true)
 @Entity
 @Table(name = "users",
@@ -26,11 +29,13 @@ import java.util.UUID;
                 @UniqueConstraint(columnNames = "email")
         })
 public class Users extends AuditModel {
+
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
+    @Column( updatable = false, nullable = false)
     private UUID id;
 
-    private String fistName;
+    private String firstName;
 
     @NotBlank(message = "lastName cannot be blank")
     @Size(min = 1, message = "lastName must have at least 1 characters")
@@ -73,24 +78,26 @@ public class Users extends AuditModel {
 
     private String imageUrl;
 
+
 //    @NotNull
     @Enumerated(EnumType.STRING)
     private AuthProvider provider;
 
     private String providerId;
+
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "role_id")
     private Role role;
 
-    public Users(String fistName, String lastName, String password, String salutation, String email, String national, LocalDate dob, String phone, boolean subscribe) {
-        this.fistName = fistName;
-        this.lastName = lastName;
-        this.password = password;
-        this.salutation = salutation;
-        this.email = email;
-        this.national = national;
-        this.dob = dob;
-        this.phone = phone;
-        this.subscribe = subscribe;
-    }
+//    public Users(String firstName, String lastName, String password, String salutation, String email, String national, LocalDate dob, String phone, boolean subscribe) {
+//        this.firstName = firstName;
+//        this.lastName = lastName;
+//        this.password = password;
+//        this.salutation = salutation;
+//        this.email = email;
+//        this.national = national;
+//        this.dob = dob;
+//        this.phone = phone;
+//        this.subscribe = subscribe;
+//    }
 }
