@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.List;
 import java.util.UUID;
 
 @Getter
@@ -27,8 +28,21 @@ public class Airport {
     @NotNull
     private String abv;
     @NotNull
+    @JsonIgnore
     private Double lat;
     @NotNull
+    @JsonIgnore
     private Double lng;
+    @NotNull
+    private String city;
+
+    @OneToMany(mappedBy = "from")
+    @JsonIgnore
+    private List<Schedule> departures;
+
+    @OneToMany(mappedBy = "to")
+    @JsonIgnore
+    private List<Schedule> arrivals;
+
 
 }

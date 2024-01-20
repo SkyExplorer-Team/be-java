@@ -53,16 +53,16 @@ public class WebSecurityConfig {
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) 
                 .authorizeRequests (auth ->
                         auth
-                                .requestMatchers("/users/login").permitAll()
-                                .requestMatchers("/users/reset-password").permitAll()
-                                .requestMatchers("/users/**").permitAll()
+//                                .requestMatchers("/users/login").permitAll()
+//                                .requestMatchers("/users/reset-password").permitAll()
+//                                .requestMatchers("/users/**").permitAll()
                                 .requestMatchers("/swagger-ui/**").permitAll()
-                                .requestMatchers("/docs.html").permitAll()
                                 .requestMatchers("/docs-api/**").permitAll()
+                                .requestMatchers("/docs.html").permitAll()
                                 .requestMatchers("/auth/**").permitAll()
-                                .requestMatchers("/users/register").permitAll()
-                                .requestMatchers("/auth/**").permitAll()
-                        .requestMatchers(request -> "/users/register".equals(request.getServletPath())).permitAll()
+//                                .requestMatchers("/users/register").permitAll()
+                        .requestMatchers(request -> "/auth/register".equals(request.getServletPath())).permitAll()
+//                        .requestMatchers(request -> "/users/register".equals(request.getServletPath())).permitAll()
                         .anyRequest().authenticated()
                 ).formLogin(Customizer.withDefaults())
                 .oauth2Login( oauth2 -> oauth2

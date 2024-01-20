@@ -24,6 +24,7 @@ import synrgy.finalproject.skyexplorer.model.dto.UsersDTO;
 import synrgy.finalproject.skyexplorer.model.entity.Role;
 import synrgy.finalproject.skyexplorer.model.entity.Users;
 import synrgy.finalproject.skyexplorer.model.provider.AuthProvider;
+import synrgy.finalproject.skyexplorer.repository.RoleRepository;
 import synrgy.finalproject.skyexplorer.repository.UsersRepository;
 import synrgy.finalproject.skyexplorer.security.jwt.JwtUtils;
 import synrgy.finalproject.skyexplorer.security.service.UserDetailsServiceImpl;
@@ -42,6 +43,9 @@ public class CustomSuccessHandler extends SavedRequestAwareAuthenticationSuccess
     private UsersRepository usersRepository;
 
     @Autowired
+    private RoleRepository roleRepository;
+
+    @Autowired
     UserDetailsServiceImpl userDetailsService;
 
     @Autowired
@@ -58,21 +62,24 @@ public class CustomSuccessHandler extends SavedRequestAwareAuthenticationSuccess
             String name = attibutes.get("name").toString();
             String familyName = attibutes.get("family_name").toString();
             String imageUrl = attibutes.get("picture").toString();
-
+            String locale = attibutes.get("locale").toString();
+            String sub = attibutes.get("sub").toString();
+            Role role = roleRepository.findByName("ROLE_USER");
             if (usersRepository.findByEmail(email) == null) {
                 Users user = new Users();
                 user.setEmail(email);
-                user.setPassword("password");
-                user.setSalutation("testing");
+                user.setPassword("");
+                user.setSalutation("");
                 user.setFirstName(name);
                 user.setLastName(familyName);
-                user.setPhone("080000000000");
+                user.setPhone("");
                 user.setDob(LocalDate.now());
-                user.setSubscribe(true);
+                user.setSubscribe(false);
                 user.setImageUrl(imageUrl);
-                user.setNational("Indonesia");
-//                user.setRole(new Role().setId((UUID)"e933988a-71ae-4477-a7ff-75612b91e4f0")); // default  ROLE_USER
+                user.setNational(locale);
+                user.setRole(role); // default  ROLE_USER
                 user.setProvider(AuthProvider.google); // look if
+                user.setProviderId(sub);
                 usersRepository.save(user);
 //                UsernamePasswordAuthenticationToken authenticationToken =
 //                        new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());

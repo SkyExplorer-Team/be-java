@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
 import org.springframework.security.oauth2.core.user.OAuth2User;
@@ -22,6 +23,7 @@ import synrgy.finalproject.skyexplorer.security.CurrentUser;
 import synrgy.finalproject.skyexplorer.security.UserPrincipal;
 import synrgy.finalproject.skyexplorer.security.service.UserDetailsImpl;
 
+import java.security.Principal;
 import java.util.Map;
 
 @RestController
@@ -30,23 +32,7 @@ public class TestingController {
     @Autowired
     private UsersRepository userRepository;
 
-    @GetMapping("/user/me")
-    @PreAuthorize("hasRole('USER')")
-    @CrossOrigin(origins = {"http://localhost:3000", "http://localhost:8080"})
-    public ResponseEntity<Object> getCurrentUser(HttpServletRequest request) {
-//        UserPrincipal userPrincipal = (UserPrincipal) request.getAttribute("userPrincipal");
-//        if (userPrincipal != null) {
-//            return userRepository.findByEmail(userPrincipal.getEmail());
-//        } else {
-//            // Handle jika userPrincipal null
-//            return null;
-//        }
-        UserDetailsImpl userDetails = (UserDetailsImpl) request.getAttribute("userPrincipal");
-        String email = userDetails.getUsername();
-        Users user = userRepository.findByEmail(email);
-        return SuccessResponse.generateResponse("success", "Success Retrived user data", user, HttpStatus.OK);
 
-    }
 
 
 //    @GetMapping("/user/me")
