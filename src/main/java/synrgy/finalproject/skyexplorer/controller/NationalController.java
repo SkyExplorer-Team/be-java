@@ -23,12 +23,12 @@ public class NationalController {
 
     @GetMapping
     public ResponseEntity<?> getNationals(){
-        var nationals = nationalService.getAll();
+        var  nationals = nationalService.getAll();
         return generatedResponse("nationals", nationals);
     }
 
     @PostMapping
-    public ResponseEntity<?> createNationals(@RequestBody NationalDto nationalDto){
+    public ResponseEntity<?> createNational(@RequestBody NationalDto nationalDto){
         var nationalSaved = nationalService.create(nationalDto);
         return generatedResponse("national", nationalSaved);
     }
