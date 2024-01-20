@@ -4,7 +4,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 import synrgy.finalproject.skyexplorer.model.entity.Users;
 
-import java.util.Optional;
 import java.util.UUID;
 
 @Repository

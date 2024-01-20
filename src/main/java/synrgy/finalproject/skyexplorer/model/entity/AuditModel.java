@@ -1,6 +1,7 @@
 package synrgy.finalproject.skyexplorer.model.entity;
 
 import jakarta.persistence.*;
+import org.hibernate.annotations.CreationTimestamp;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -11,10 +12,13 @@ import java.util.Date;
 @MappedSuperclass
 @EntityListeners(AuditingEntityListener.class)
 public class AuditModel implements Serializable {
-    @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "created_date", nullable = false, updatable = false)
+
+//    @Temporal(TemporalType.TIMESTAMP)
+    @CreationTimestamp
+    @Column(name = "created_date" ,columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP",nullable = false, updatable = false)
     @CreatedDate
-    private Date createdDate;
+    public Date createdDate;
+
 
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "updated_date", nullable = false)

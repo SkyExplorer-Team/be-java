@@ -1,5 +1,6 @@
 package synrgy.finalproject.skyexplorer.service;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -10,8 +11,11 @@ import synrgy.finalproject.skyexplorer.repository.RoleRepository;
 import synrgy.finalproject.skyexplorer.repository.UsersRepository;
 
 import java.time.LocalDateTime;
+import java.util.Arrays;
+import java.util.stream.Collectors;
 
 @Service
+@Slf4j
 public class UsersService {
 
     @Autowired
@@ -28,14 +32,13 @@ public class UsersService {
 
 
     public Users saveUser(UsersDTO usersDTO) {
+
         if (usersDTO.getEmail() == null) {
             throw new IllegalArgumentException("Email cannot be null");
         }
-
         Users existingUser = usersRepository.findByEmail(usersDTO.getEmail());
         if (existingUser != null) {
             if (existingUser.isRegistrationComplete()) {
-                // User with this email is already registered and registration is complete
                 throw new IllegalArgumentException("User with this email is already registered and registration is complete.");
             }
 
@@ -65,10 +68,17 @@ public class UsersService {
         newUser.setOTPVerified(false);
         newUser.setRegistrationComplete(false);
 
+        System.out.println("Im here save user");
+        try{
         usersRepository.save(newUser);
-
-
         return newUser;
+        }catch (Exception e) {
+        System.out.println("Im here save user");
+            log.info("Why error {}", e.getMessage());
+        }
+        return  null;
+
+
     }
 
     public boolean verifyOTP(Users user, String otpCode) {
@@ -161,16 +171,26 @@ public class UsersService {
 
     private Users convertDTOToEntity(UsersDTO usersDTO, String password, String otpCode, LocalDateTime otpExpireTime) {
         Users user = new Users(
-                usersDTO.getFistName(),
-                usersDTO.getLastName(),
-                password,
-                usersDTO.getSalutation(),
-                usersDTO.getEmail(),
-                usersDTO.getNational(),
-                usersDTO.getDob(),
-                usersDTO.getPhone(),
-                usersDTO.isSubscribe()
+//                usersDTO.getFistName(),
+//                usersDTO.getLastName(),
+//                password,
+//                usersDTO.getSalutation(),
+//                usersDTO.getEmail(),
+//                usersDTO.getNational(),
+//                usersDTO.getDob(),
+//                usersDTO.getPhone(),
+//                usersDTO.isSubscribe()
         );
+        user.setFirstName(usersDTO.getFistName());
+        user.setLastName(usersDTO.getLastName());
+//        user.setPassword(usersDTO.getPassword());
+        user.setPassword(password);
+        user.setSalutation(usersDTO.getSalutation());
+        user.setEmail(usersDTO.getEmail());
+        user.setNational(usersDTO.getNational());
+        user.setDob(usersDTO.getDob());
+        user.setPhone(usersDTO.getPhone());
+        user.setSubscribe(user.isSubscribe());
 
         user.setOtpCode(otpCode);
         user.setOtpExpireTime(otpExpireTime);

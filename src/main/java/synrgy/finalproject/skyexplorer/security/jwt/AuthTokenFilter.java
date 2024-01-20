@@ -20,10 +20,10 @@ import java.io.IOException;
 public class AuthTokenFilter extends OncePerRequestFilter {
 
     @Autowired
-    UserDetailsServiceImpl userDetailsService;
+    private UserDetailsServiceImpl userDetailsService;
 
     @Autowired
-    JwtUtils jwtUtils;
+    private JwtUtils jwtUtils;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request,
@@ -32,20 +32,15 @@ public class AuthTokenFilter extends OncePerRequestFilter {
 
 
         String jwt = parsetJwt(request);
-
         if (jwt != null && jwtUtils.validateJwtToken(jwt)){
-            String username = jwtUtils.getUsername(jwt);
-
+        String username = jwtUtils.getUsername(jwt);
             UserDetails userDetails = userDetailsService.loadUserByUsername(username);
-
             UsernamePasswordAuthenticationToken authenticationToken =
                     new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
-
             authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
             SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+            request.setAttribute("userPrincipal", userDetails);
         }
-
-
         filterChain.doFilter(request, response);
 
     }

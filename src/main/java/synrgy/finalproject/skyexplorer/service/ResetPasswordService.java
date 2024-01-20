@@ -23,7 +23,7 @@ public class ResetPasswordService {
     @Autowired
     private UsersRepository usersRepository;
 
-    public void updateRessetPassword(String email) throws UsersNotFoundException {
+    public void updateResetPassword(String email) throws UsersNotFoundException {
         Users users = usersRepository.findByEmail(email);
 
         if (users != null) {

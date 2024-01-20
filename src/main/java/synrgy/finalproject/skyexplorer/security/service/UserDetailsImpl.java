@@ -11,10 +11,10 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class UserDetailsImpl implements UserDetails {
-    private String email;
-    private String password;
+    private final String email;
+    private final String password;
 
-    private List<GrantedAuthority> authorities;
+    private final List<GrantedAuthority> authorities;
 
     public UserDetailsImpl(String email, String password, List<GrantedAuthority> authorities) {
         this.email = email;
