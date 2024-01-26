@@ -9,7 +9,7 @@ public class ResponseGeneral {
     public static ResponseEntity<?> generatedResponse(String name, Object value){
         HashMap<String, Object> maps = new HashMap<>() ;
         maps.put(name, value);
-        return ResponseEntity.ok(new ResponseDto("succes", maps));
+        return ResponseEntity.ok(new ResponseDto("success", maps));
     }
 
 }
