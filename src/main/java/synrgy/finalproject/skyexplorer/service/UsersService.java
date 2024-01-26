@@ -101,7 +101,7 @@ public class UsersService {
 
                 String subject = "Verification Code";
                 String body = "Your verification code is: " + generatedOTP;
-                emailService.sendEmail(user.getEmail(), subject, body);
+                emailService.sendAsync(user.getEmail(), subject, body);
 
                 usersRepository.save(user);
 
@@ -110,7 +110,7 @@ public class UsersService {
                 // Jika kode OTP masih valid, kirim ulang kode yang sama
                 String subject = "Verification Code";
                 String body = "Your verification code is: " + user.getOtpCode();
-                emailService.sendEmail(user.getEmail(), subject, body);
+                emailService.sendAsync(user.getEmail(), subject, body);
 
                 return user.getOtpCode();
             }
@@ -127,7 +127,7 @@ public class UsersService {
 
             String subject = "Verification Code";
             String body = "Your verification code is: " + generatedOTP;
-            emailService.sendEmail(user.getEmail(), subject, body);
+            emailService.sendAsync(user.getEmail(), subject, body);
 
             usersRepository.save(user);
 
@@ -170,20 +170,9 @@ public class UsersService {
     }
 
     private Users convertDTOToEntity(UsersDTO usersDTO, String password, String otpCode, LocalDateTime otpExpireTime) {
-        Users user = new Users(
-//                usersDTO.getFistName(),
-//                usersDTO.getLastName(),
-//                password,
-//                usersDTO.getSalutation(),
-//                usersDTO.getEmail(),
-//                usersDTO.getNational(),
-//                usersDTO.getDob(),
-//                usersDTO.getPhone(),
-//                usersDTO.isSubscribe()
-        );
+        Users user = new Users();
         user.setFirstName(usersDTO.getFistName());
         user.setLastName(usersDTO.getLastName());
-//        user.setPassword(usersDTO.getPassword());
         user.setPassword(password);
         user.setSalutation(usersDTO.getSalutation());
         user.setEmail(usersDTO.getEmail());

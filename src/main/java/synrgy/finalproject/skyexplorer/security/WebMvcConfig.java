@@ -17,10 +17,8 @@ public class WebMvcConfig implements WebMvcConfigurer {
 
     @Override
     public void addCorsMappings(CorsRegistry registry) {
-        System.out.println("heelooo===");
-        System.out.println(Arrays.stream(allowedOrigins).toArray()); // [Ljava.lang.String;@68423388
         registry.addMapping("/**")
-                .allowedOrigins("http://localhost:3000","http://localhost:8080")
+                .allowedOrigins(allowedOrigins)
                 .allowedMethods("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS")
                 .allowedHeaders("*")
                 .allowCredentials(true)

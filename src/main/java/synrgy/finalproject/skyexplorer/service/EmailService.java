@@ -1,18 +1,35 @@
 package synrgy.finalproject.skyexplorer.service;
 
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
+import org.springframework.core.task.TaskExecutor;
 
 @Service
+@Slf4j
+@RequiredArgsConstructor
 public class EmailService {
-    @Autowired
-    JavaMailSender javaMailSender;
 
-    public void sendEmail(String to, String subject, String body) {
+    private final JavaMailSender javaMailSender;
+
+    @Qualifier("taskExecutor")
+    private final TaskExecutor taskExecutor;
+
+    @Value("${spring.mail.username}")
+    private String emailSender;
+
+    public void sendAsync(String to, String subject, String body){
+        taskExecutor.execute(() -> sendEmail(to, subject, body));
+    }
+
+    private void sendEmail(String to, String subject, String body) {
         SimpleMailMessage message = new SimpleMailMessage();
-        message.setFrom("creativesoul290@gmail.com");
+        message.setFrom(emailSender);
         message.setTo(to);
         message.setSubject(subject);
         message.setText(body);
@@ -24,6 +41,6 @@ public class EmailService {
         String body = "Click the link below to reset your password:\n"
                 + "http://localhost:8080/api/users/reset-password?token=" + resetPasswordToken;
 
-        sendEmail(to, subject, body);
+        sendAsync(to, subject, body);
     }
 }
