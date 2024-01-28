@@ -52,6 +52,7 @@ public class AuthController {
     private Validator validator;
 
     @PostMapping("/register")
+    @CrossOrigin(origins = {"http://localhost:3000", "http://localhost:8080"})
     public ResponseEntity<Object> registerBasic(@RequestBody UsersDTO req) {
         validator.validate(req);
         try {
@@ -69,6 +70,7 @@ public class AuthController {
     }
 
     @PostMapping("/verifyOTP")
+    @CrossOrigin(origins = {"http://localhost:3000", "http://localhost:8080"})
     public ResponseEntity<Object> verifyOTP(@RequestParam String email, @RequestBody Map<String, String> requestBody) {
         try {
             String otpCode = requestBody.get("otpCode");
@@ -91,6 +93,7 @@ public class AuthController {
     }
 
     @PostMapping("/resend")
+    @CrossOrigin(origins = {"http://localhost:3000", "http://localhost:8080"})
     public ResponseEntity<Object> resendOTP(@RequestParam String email) {
         try {
             String newOTP = usersService.resendOTPEmail(email);
@@ -106,6 +109,7 @@ public class AuthController {
 
     @Transactional
     @PostMapping("/setPassword")
+    @CrossOrigin(origins = {"http://localhost:3000", "http://localhost:8080"})
     public ResponseEntity<Object> setPassword(@RequestParam String email, @RequestBody Map<String, String> requestBody) {
         try {
             String password = requestBody.get("password");
@@ -125,6 +129,7 @@ public class AuthController {
     }
 
     @PostMapping("/reset-password-request")
+    @CrossOrigin(origins = {"http://localhost:3000", "http://localhost:8080"})
     public ResponseEntity<Object> requestResetPassword(@RequestBody UsersDTO usersDTO) {
         String email = usersDTO.getEmail();
         try {
@@ -136,6 +141,7 @@ public class AuthController {
     }
 
     @PostMapping("/reset-password")
+    @CrossOrigin(origins = {"http://localhost:3000", "http://localhost:8080"})
     public ResponseEntity<Object> resetPassword(@RequestParam String token, @RequestBody Map<String, String> requestBody) {
         String newPassword = requestBody.get("newPassword");
 
@@ -150,6 +156,7 @@ public class AuthController {
     }
 
     @PostMapping("/login")
+    @CrossOrigin(origins = {"http://localhost:3000", "http://localhost:8080"})
     public ResponseEntity<Object> authenticate(@RequestBody LoginRequest loginRequest){
         Authentication authentication = authenticationManager
                 .authenticate( new UsernamePasswordAuthenticationToken(
