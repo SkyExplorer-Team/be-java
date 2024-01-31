@@ -18,7 +18,6 @@ public class ScheduleService {
 
     public List<Schedule> getSchedules(ScheduleDto scheduleDto){
         Pageable pageable = PageRequest.of(0, 6); // Limit to 6 items
-
         return scheduleRepository.findSchedules(
                 scheduleDto.from(),
                 scheduleDto.to(),
