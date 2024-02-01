@@ -95,7 +95,9 @@ public class WebSecurityConfig {
                 "https://be-java-production.up.railway.app",
                 "http://be-java-production.up.railway.app",
                 "http://localhost:8080",
-                "http://localhost:3000"
+                "http://localhost:3000",
+                "https://be-java-production.up.railway.app/api",
+                "http://be-java-production.up.railway.app/api"
         ));
         configuration.setAllowedMethods(Arrays.asList(
                 "GET", "POST", "PUT", "DELETE"
