@@ -52,7 +52,7 @@ public class AuthController {
     private Validator validator;
 
     @PostMapping("/register")
-    @CrossOrigin(origins = {"http://be-java-production.up.railway.app", "https://be-java-production.up.railway.app", "http://localhost:3000"})
+    @CrossOrigin(origins = {"http://be-java-production.up.railway.app/api", "https://be-java-production.up.railway.app", "http://localhost:3000"})
     public ResponseEntity<Object> registerBasic(@RequestBody UsersDTO req) {
         validator.validate(req);
         try {
