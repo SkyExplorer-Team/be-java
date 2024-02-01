@@ -93,6 +93,7 @@ public class WebSecurityConfig {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowedOrigins(List.of(
                 "https://be-java-production.up.railway.app",
+                "http://be-java-production.up.railway.app",
                 "http://localhost:8080",
                 "http://localhost:3000"
         ));
