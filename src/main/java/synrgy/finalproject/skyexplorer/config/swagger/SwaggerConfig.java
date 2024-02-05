@@ -27,7 +27,8 @@ public class SwaggerConfig {
                         .license(new License().name("License of API").url("API license URL")));
     }
     private SecurityScheme createAPIKeyScheme() {
-        return new SecurityScheme().type(SecurityScheme.Type.HTTP)
+        return new SecurityScheme()
+            // .type(SecurityScheme.Type.HTTP)
                 .bearerFormat("JWT")
                 .scheme("bearer");
     }
