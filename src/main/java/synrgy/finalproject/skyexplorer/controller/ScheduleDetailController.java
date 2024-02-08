@@ -41,4 +41,55 @@ public class ScheduleDetailController {
             return SuccessResponse.generateResponse("error", e.getMessage(), null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
+    @GetMapping("/getSchedulesLast")
+    @PreAuthorize("hasRole('ROLE_USER')")
+    public ResponseEntity<Object> getSchedulesByFiltersLast(
+            @RequestParam UUID cabinClassId,
+            @RequestParam UUID ticketTypeId,
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date,
+            @RequestParam UUID fromAirportId,
+            @RequestParam UUID toAirportId) {
+        try {
+            List<Schedule> schedules = scheduleDetailService.getSchedulesByCabinClassAndTicketTypeAndDateLast(
+                    cabinClassId, ticketTypeId, date, fromAirportId, toAirportId);
+            return SuccessResponse.generateResponse("success", "Schedules retrieved successfully", schedules, HttpStatus.OK);
+        } catch (Exception e) {
+            return SuccessResponse.generateResponse("error", e.getMessage(), null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @GetMapping("/getSchedulesEarliestArrivel")
+    @PreAuthorize("hasRole('ROLE_USER')")
+    public ResponseEntity<Object> getSchedulesByFiltersEarliestArrivel(
+            @RequestParam UUID cabinClassId,
+            @RequestParam UUID ticketTypeId,
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date,
+            @RequestParam UUID fromAirportId,
+            @RequestParam UUID toAirportId) {
+        try {
+            List<Schedule> schedules = scheduleDetailService.getSchedulesByCabinClassAndTicketTypeAndDateEarliestArrival(
+                    cabinClassId, ticketTypeId, date, fromAirportId, toAirportId);
+            return SuccessResponse.generateResponse("success", "Schedules retrieved successfully", schedules, HttpStatus.OK);
+        } catch (Exception e) {
+            return SuccessResponse.generateResponse("error", e.getMessage(), null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @GetMapping("/getSchedulesLastArrivel")
+    @PreAuthorize("hasRole('ROLE_USER')")
+    public ResponseEntity<Object> getSchedulesByFiltersLastArrivel(
+            @RequestParam UUID cabinClassId,
+            @RequestParam UUID ticketTypeId,
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date,
+            @RequestParam UUID fromAirportId,
+            @RequestParam UUID toAirportId) {
+        try {
+            List<Schedule> schedules = scheduleDetailService.getSchedulesByCabinClassAndTicketTypeAndDateLastArrival(
+                    cabinClassId, ticketTypeId, date, fromAirportId, toAirportId);
+            return SuccessResponse.generateResponse("success", "Schedules retrieved successfully", schedules, HttpStatus.OK);
+        } catch (Exception e) {
+            return SuccessResponse.generateResponse("error", e.getMessage(), null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 }

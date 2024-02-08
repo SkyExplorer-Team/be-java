@@ -27,4 +27,49 @@ public interface ScheduleDetailRepository extends JpaRepository<ScheduleDetail, 
             @Param("date") LocalDate date,
             @Param("fromAirportId") UUID fromAirportId,
             @Param("toAirportId") UUID toAirportId);
+
+    @Query("SELECT s FROM Schedule s " +
+            "JOIN ScheduleDetail sd ON s.id = sd.schedule.id " +
+            "WHERE sd.cabinClass.id = :cabinClassId " +
+            "AND sd.ticketType.id = :ticketTypeId " +
+            "AND CAST(s.timeDeparture AS date) = :date " +
+            "AND s.from.id = :fromAirportId " +
+            "AND s.to.id = :toAirportId " +
+            "ORDER BY s.timeDeparture DESC")
+    List<Schedule> findSchedulesByCabinClassAndTicketTypeAndDateLast(
+            @Param("cabinClassId") UUID cabinClassId,
+            @Param("ticketTypeId") UUID ticketTypeId,
+            @Param("date") LocalDate date,
+            @Param("fromAirportId") UUID fromAirportId,
+            @Param("toAirportId") UUID toAirportId);
+
+    @Query("SELECT s FROM Schedule s " +
+            "JOIN ScheduleDetail sd ON s.id = sd.schedule.id " +
+            "WHERE sd.cabinClass.id = :cabinClassId " +
+            "AND sd.ticketType.id = :ticketTypeId " +
+            "AND CAST(s.timeDeparture AS date) = :date " +
+            "AND s.from.id = :fromAirportId " +
+            "AND s.to.id = :toAirportId " +
+            "ORDER BY s.timeArrive ASC")
+    List<Schedule> findSchedulesByCabinClassAndTicketTypeAndDateEarliestArrival(
+            @Param("cabinClassId") UUID cabinClassId,
+            @Param("ticketTypeId") UUID ticketTypeId,
+            @Param("date") LocalDate date,
+            @Param("fromAirportId") UUID fromAirportId,
+            @Param("toAirportId") UUID toAirportId);
+
+    @Query("SELECT s FROM Schedule s " +
+            "JOIN ScheduleDetail sd ON s.id = sd.schedule.id " +
+            "WHERE sd.cabinClass.id = :cabinClassId " +
+            "AND sd.ticketType.id = :ticketTypeId " +
+            "AND CAST(s.timeDeparture AS date) = :date " +
+            "AND s.from.id = :fromAirportId " +
+            "AND s.to.id = :toAirportId " +
+            "ORDER BY s.timeArrive DESC")
+    List<Schedule> findSchedulesByCabinClassAndTicketTypeAndDateLastArrival(
+            @Param("cabinClassId") UUID cabinClassId,
+            @Param("ticketTypeId") UUID ticketTypeId,
+            @Param("date") LocalDate date,
+            @Param("fromAirportId") UUID fromAirportId,
+            @Param("toAirportId") UUID toAirportId);
 }
