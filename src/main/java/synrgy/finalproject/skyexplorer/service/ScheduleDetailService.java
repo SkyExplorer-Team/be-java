@@ -19,4 +19,22 @@ public class ScheduleDetailService {
         return scheduleDetailRepository.findSchedulesByCabinClassAndTicketTypeAndDate(
                 cabinClassId, ticketTypeId, date, fromAirportId, toAirportId);
     }
+
+    public List<Schedule> getSchedulesByCabinClassAndTicketTypeAndDateLast(
+            UUID cabinClassId, UUID ticketTypeId, LocalDate date, UUID fromAirportId, UUID toAirportId) {
+        return scheduleDetailRepository.findSchedulesByCabinClassAndTicketTypeAndDateLast(
+                cabinClassId, ticketTypeId, date, fromAirportId, toAirportId);
+    }
+
+    public List<Schedule> getSchedulesByCabinClassAndTicketTypeAndDateEarliestArrival(
+            UUID cabinClassId, UUID ticketTypeId, LocalDate date, UUID fromAirportId, UUID toAirportId) {
+        return scheduleDetailRepository.findSchedulesByCabinClassAndTicketTypeAndDateEarliestArrival(
+                cabinClassId, ticketTypeId, date, fromAirportId, toAirportId);
+    }
+
+    public List<Schedule> getSchedulesByCabinClassAndTicketTypeAndDateLastArrival(
+            UUID cabinClassId, UUID ticketTypeId, LocalDate date, UUID fromAirportId, UUID toAirportId) {
+        return scheduleDetailRepository.findSchedulesByCabinClassAndTicketTypeAndDateLastArrival(
+                cabinClassId, ticketTypeId, date, fromAirportId, toAirportId);
+    }
 }
