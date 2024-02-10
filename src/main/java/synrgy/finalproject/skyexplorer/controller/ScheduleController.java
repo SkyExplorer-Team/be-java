@@ -14,7 +14,7 @@ import static synrgy.finalproject.skyexplorer.utils.ResponseGeneral.generatedRes
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("api/schedule")
+@RequestMapping("/schedule")
 public class ScheduleController {
 
     private final ScheduleService scheduleService;

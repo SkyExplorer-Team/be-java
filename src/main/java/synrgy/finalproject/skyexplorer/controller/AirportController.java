@@ -16,7 +16,7 @@ import java.util.List;
 import static synrgy.finalproject.skyexplorer.utils.ResponseGeneral.generatedResponse;
 
 @RestController
-@RequestMapping("/api/airport")
+@RequestMapping("/airport")
 @RequiredArgsConstructor
 @Slf4j
 public class AirportController {

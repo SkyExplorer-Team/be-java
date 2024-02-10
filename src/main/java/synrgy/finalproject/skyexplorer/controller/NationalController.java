@@ -14,7 +14,7 @@ import java.util.List;
 import static synrgy.finalproject.skyexplorer.utils.ResponseGeneral.generatedResponse;
 
 @RestController
-@RequestMapping("/api/national")
+@RequestMapping("/national")
 @RequiredArgsConstructor
 @Slf4j
 public class NationalController {
