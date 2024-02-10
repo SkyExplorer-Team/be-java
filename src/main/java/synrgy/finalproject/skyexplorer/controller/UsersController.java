@@ -38,7 +38,6 @@ public class UsersController {
     private UsersService usersService;
     @GetMapping("/me")
     @PreAuthorize("hasRole('USER')")
-    @CrossOrigin(origins = {"http://be-java-production.up.railway.app", "https://be-java-production.up.railway.app"})
     public ResponseEntity<?> getCurrentUser(HttpServletRequest request) {
 //        UserDetailsImpl userDetails = (UserDetailsImpl) request.getAttribute("userPrincipal");
 //        String email = userDetails.getUsername();
