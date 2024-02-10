@@ -96,6 +96,7 @@ public class WebSecurityConfig {
                 "http://be-java-production.up.railway.app",
                 "http://localhost:8080",
                 "http://localhost:3000",
+                "http://localhost:5173",
                 "https://be-java-production.up.railway.app/api",
                 "http://be-java-production.up.railway.app/api"
         ));
