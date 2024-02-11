@@ -191,4 +191,12 @@ public class UsersService {
     public Users findUserByEmail(String email) {
         return usersRepository.findByEmail(email);
     }
+
+    public void deleteUsers(Users users) {
+        if (users != null) {
+            usersRepository.delete(users);
+        } else {
+            throw new IllegalArgumentException("User is null");
+        }
+    }
 }

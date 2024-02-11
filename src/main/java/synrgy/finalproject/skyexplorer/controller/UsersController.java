@@ -46,4 +46,20 @@ public class UsersController {
         return SuccessResponse.generateResponse("success", "Success Retrived user data", user, HttpStatus.OK);
 
     }
+
+    @DeleteMapping("/{email}")
+    public ResponseEntity<Object> deleteUsersByEmail(@PathVariable String email) {
+        try {
+            Users user = usersService.findUserByEmail(email);
+            if (user != null) {
+                usersService.deleteUsers(user);
+                return ResponseEntity.ok("User with email " + email + " has been deleted successfully.");
+            } else {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User with email " + email + " not found.");
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to delete user with email " + email + ": " + e.getMessage());
+        }
+    }
+
 }
