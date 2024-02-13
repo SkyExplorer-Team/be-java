@@ -6,12 +6,16 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import synrgy.finalproject.skyexplorer.model.dto.UsersDTO;
 import synrgy.finalproject.skyexplorer.model.entity.Role;
+import synrgy.finalproject.skyexplorer.model.entity.TravelDocument;
 import synrgy.finalproject.skyexplorer.model.entity.Users;
 import synrgy.finalproject.skyexplorer.repository.RoleRepository;
+import synrgy.finalproject.skyexplorer.repository.TravelDocumentRepository;
 import synrgy.finalproject.skyexplorer.repository.UsersRepository;
 
 import java.time.LocalDateTime;
 import java.util.Arrays;
+import java.util.Optional;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -29,6 +33,9 @@ public class UsersService {
 
     @Autowired
     private PasswordEncoder passwordEncoder;
+
+    @Autowired
+    private TravelDocumentRepository travelDocumentRepository;
 
 
     public Users saveUser(UsersDTO usersDTO) {
@@ -68,9 +75,13 @@ public class UsersService {
         newUser.setOTPVerified(false);
         newUser.setRegistrationComplete(false);
 
+        TravelDocument travelDocument = new TravelDocument();
+        travelDocument.setUser(newUser);
+
         System.out.println("Im here save user");
         try{
         usersRepository.save(newUser);
+        travelDocumentRepository.save(travelDocument);
         return newUser;
         }catch (Exception e) {
         System.out.println("Im here save user");
@@ -197,6 +208,32 @@ public class UsersService {
             usersRepository.delete(users);
         } else {
             throw new IllegalArgumentException("User is null");
+        }
+    }
+
+
+    public Users UpdateUser(UUID id, UsersDTO users) {
+        Optional<Users> optionalUsers = usersRepository.findById(id);
+        if (optionalUsers.isPresent()) {
+            Users userUpdate = optionalUsers.get();
+            userUpdate.setFirstName(users.getFistName());
+            userUpdate.setLastName(users.getLastName());
+            userUpdate.setSalutation(users.getSalutation());
+            userUpdate.setNational(users.getNational());
+            userUpdate.setDob(users.getDob());
+            userUpdate.setPhone(users.getPhone());
+
+            if (!userUpdate.getEmail().equals(users.getEmail())) {
+                if (usersRepository.findByEmail(users.getEmail()) != null) {
+                    throw new IllegalArgumentException("Email already exists");
+                } else {
+                    userUpdate.setEmail(users.getEmail());
+                }
+            }
+
+            return usersRepository.save(userUpdate);
+        } else {
+            return null;
         }
     }
 }
