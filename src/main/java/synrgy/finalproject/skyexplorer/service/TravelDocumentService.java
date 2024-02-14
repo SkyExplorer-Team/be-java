@@ -5,7 +5,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import synrgy.finalproject.skyexplorer.model.dto.TravelDocumentDTO;
 import synrgy.finalproject.skyexplorer.model.entity.TravelDocument;
+import synrgy.finalproject.skyexplorer.model.entity.Users;
 import synrgy.finalproject.skyexplorer.repository.TravelDocumentRepository;
+import synrgy.finalproject.skyexplorer.repository.UsersRepository;
 
 import java.util.Optional;
 import java.util.UUID;
@@ -13,6 +15,10 @@ import java.util.UUID;
 @Service
 @Slf4j
 public class TravelDocumentService {
+
+    @Autowired
+    private UsersRepository usersRepository;
+
     @Autowired
     private TravelDocumentRepository travelDocumentRepository;
 
@@ -35,5 +41,15 @@ public class TravelDocumentService {
             return null;
         }
 
+    }
+
+    public Optional<TravelDocument> getTravelDocumentByUserId(UUID userId) {
+        Optional<Users> optionalUser = usersRepository.findById(userId);
+        if (optionalUser.isPresent()) {
+            Users user = optionalUser.get();
+            return Optional.ofNullable(user.getTravelDocument());
+        } else {
+            return Optional.empty();
+        }
     }
 }
