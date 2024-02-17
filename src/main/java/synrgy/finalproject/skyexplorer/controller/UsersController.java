@@ -15,35 +15,114 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 import synrgy.finalproject.skyexplorer.exception.UsersNotFoundException;
+import synrgy.finalproject.skyexplorer.model.dto.TravelDocumentDTO;
 import synrgy.finalproject.skyexplorer.model.dto.UsersDTO;
 import synrgy.finalproject.skyexplorer.model.dto.request.LoginRequest;
 import synrgy.finalproject.skyexplorer.model.dto.response.JwtResponse;
 import synrgy.finalproject.skyexplorer.model.dto.response.SuccessResponse;
+import synrgy.finalproject.skyexplorer.model.entity.TravelDocument;
 import synrgy.finalproject.skyexplorer.model.entity.Users;
 import synrgy.finalproject.skyexplorer.model.provider.AuthProvider;
+import synrgy.finalproject.skyexplorer.repository.TravelDocumentRepository;
 import synrgy.finalproject.skyexplorer.security.jwt.JwtUtils;
 import synrgy.finalproject.skyexplorer.security.service.UserDetailsImpl;
 import synrgy.finalproject.skyexplorer.security.service.UserDetailsServiceImpl;
 import synrgy.finalproject.skyexplorer.service.ResetPasswordService;
+import synrgy.finalproject.skyexplorer.service.TravelDocumentService;
 import synrgy.finalproject.skyexplorer.service.UsersService;
 import synrgy.finalproject.skyexplorer.service.Validator;
 
-import java.util.List;
-import java.util.Map;
+import java.security.Principal;
+import java.util.*;
 
 @RestController
 @RequestMapping("/users")
 public class UsersController {
     @Autowired
     private UsersService usersService;
+
+    @Autowired
+    private TravelDocumentService travelDocumentService;
+
     @GetMapping("/me")
     @PreAuthorize("hasRole('USER')")
-    @CrossOrigin(origins = {"http://be-java-production.up.railway.app", "https://be-java-production.up.railway.app"})
-    public ResponseEntity<Object> getCurrentUser(HttpServletRequest request) {
+    public ResponseEntity<?> getCurrentUser(HttpServletRequest request) {
 //        UserDetailsImpl userDetails = (UserDetailsImpl) request.getAttribute("userPrincipal");
 //        String email = userDetails.getUsername();
         Users user = usersService.findUserByEmail(request.getUserPrincipal().getName());
         return SuccessResponse.generateResponse("success", "Success Retrived user data", user, HttpStatus.OK);
 
+
     }
+
+    @DeleteMapping("/{email}")
+    public ResponseEntity<Object> deleteUsersByEmail(@PathVariable String email) {
+        try {
+            Users user = usersService.findUserByEmail(email);
+            if (user != null) {
+                usersService.deleteUsers(user);
+                return SuccessResponse.generateResponse("success", "User with email " + email + " has been deleted successfully.", email, HttpStatus.OK);
+            } else {
+                return SuccessResponse.generateResponse("error", "User with email " + email + " not found.", email, HttpStatus.NOT_FOUND);
+            }
+        } catch (Exception e) {
+            return SuccessResponse.generateResponse("error", e.getMessage(), null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @PatchMapping("/personal/{id}")
+    public ResponseEntity<Object> updateUsers(@PathVariable UUID id, @RequestBody UsersDTO userUpdate) {
+        try {
+            Users updateUsers = usersService.UpdateUser(id, userUpdate);
+
+            if (updateUsers != null) {
+                return SuccessResponse.generateResponse("success", "User has been update successfully.", updateUsers, HttpStatus.OK);
+            } else {
+                return SuccessResponse.generateResponse("error", "User not found.", updateUsers, HttpStatus.NOT_FOUND);
+            }
+        } catch (Exception e) {
+            return SuccessResponse.generateResponse("error", e.getMessage(), null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @GetMapping("/personal/{id}")
+    public ResponseEntity<Object> getUsers(@PathVariable UUID id) {
+        try {
+            Optional<Users> optionalUser = usersService.findUserById(id);
+            if (optionalUser.isPresent()) {
+                Users user = optionalUser.get();
+                return SuccessResponse.generateResponse("success", "User has been successfully.", user, HttpStatus.OK);
+            } else {
+                return SuccessResponse.generateResponse("error", "User not found.", null, HttpStatus.NOT_FOUND);
+            }
+        } catch (Exception e) {
+            return SuccessResponse.generateResponse("error", e.getMessage(), null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @PatchMapping("/document/{id}")
+    public ResponseEntity<Object> updateDocument(@PathVariable UUID id, @RequestBody TravelDocumentDTO userDocument) {
+        try {
+            TravelDocument updateDocument = travelDocumentService.updateDocument(id, userDocument);
+
+            if (updateDocument != null) {
+                return SuccessResponse.generateResponse("success", "Document has been update successfully.", updateDocument, HttpStatus.OK);
+            } else {
+                return SuccessResponse.generateResponse("error", "Document not found.", updateDocument, HttpStatus.NOT_FOUND);
+            }
+        } catch (Exception e) {
+            return SuccessResponse.generateResponse("error", e.getMessage(), null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @GetMapping("/{userId}/travel-document")
+    public ResponseEntity<Object> getTravelDocumentByUserId(@PathVariable UUID userId) {
+        Optional<TravelDocument> optionalTravelDocument = travelDocumentService.getTravelDocumentByUserId(userId);
+        if (optionalTravelDocument.isPresent()) {
+            return SuccessResponse.generateResponse("success", "Document has been successfully.", optionalTravelDocument, HttpStatus.OK);
+        } else {
+            return SuccessResponse.generateResponse("error", "Document not found.", null, HttpStatus.NOT_FOUND);
+        }
+    }
+
 }

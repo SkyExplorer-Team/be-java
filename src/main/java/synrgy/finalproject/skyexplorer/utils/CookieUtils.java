@@ -13,9 +13,6 @@ import java.util.Optional;
 public class CookieUtils {
 
     public static Optional<Cookie> getCookie(HttpServletRequest request, String name) {
-        log.info("urlllllllll===== {}",request.getPathInfo());
-        log.info("urlllllllll===== {}",request.getServletPath());
-        log.info("urlllllllll===== {}",name);
         Cookie[] cookies = request.getCookies();
 
         if (cookies != null && cookies.length > 0) {

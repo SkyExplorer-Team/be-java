@@ -1,6 +1,8 @@
 package synrgy.finalproject.skyexplorer.model.entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import lombok.*;
@@ -72,4 +74,9 @@ public class Users extends AuditModel {
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "role_id")
     private Role role;
+
+    @OneToOne(mappedBy = "user", cascade = CascadeType.REMOVE)
+    @JsonManagedReference
+    @JsonIgnoreProperties("user")
+    private TravelDocument travelDocument;
 }

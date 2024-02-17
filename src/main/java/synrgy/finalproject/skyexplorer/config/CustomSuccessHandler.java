@@ -137,7 +137,6 @@ public class CustomSuccessHandler extends SavedRequestAwareAuthenticationSuccess
 //                throw new RuntimeException(e);
 //            }
 //        }
-log.info("++++++++++## {}",  redirectUri);
         String targetUrl = redirectUri.orElse("http://localhost:3000/oauth2/redirect");
 //        String targetUrl = redirectUri.orElse(getDefaultTargetUrl());
 //        String token = jwtUtils.generateToken(authentication);

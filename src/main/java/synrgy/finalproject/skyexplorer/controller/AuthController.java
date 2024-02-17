@@ -1,5 +1,7 @@
 package synrgy.finalproject.skyexplorer.controller;
 
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -52,7 +54,7 @@ public class AuthController {
     private Validator validator;
 
     @PostMapping("/register")
-    @CrossOrigin(origins = {"http://be-java-production.up.railway.app", "https://be-java-production.up.railway.app"})
+    @CrossOrigin(origins = {"http://be-java-production.up.railway.app/api", "https://be-java-production.up.railway.app", "http://localhost:3000"})
     public ResponseEntity<Object> registerBasic(@RequestBody UsersDTO req) {
         validator.validate(req);
         try {
@@ -71,7 +73,12 @@ public class AuthController {
 
     @PostMapping("/verifyOTP")
     @CrossOrigin(origins = {"http://be-java-production.up.railway.app", "https://be-java-production.up.railway.app"})
-    public ResponseEntity<Object> verifyOTP(@RequestParam String email, @RequestBody Map<String, String> requestBody) {
+    public ResponseEntity<Object> verifyOTP(@RequestParam String email, @io.swagger.v3.oas.annotations.parameters.RequestBody(
+            content = @Content(
+                    mediaType = "application/json",
+                    schema = @Schema(example = "{\"otpCode\":\"Masukan OTP dari email\"}")
+            )
+    ) @RequestBody Map<String, String> requestBody) {
         try {
             String otpCode = requestBody.get("otpCode");
             Users user = usersService.findUserByEmail(email);
@@ -110,7 +117,12 @@ public class AuthController {
     @Transactional
     @PostMapping("/setPassword")
     @CrossOrigin(origins = {"http://be-java-production.up.railway.app", "https://be-java-production.up.railway.app"})
-    public ResponseEntity<Object> setPassword(@RequestParam String email, @RequestBody Map<String, String> requestBody) {
+    public ResponseEntity<Object> setPassword(@RequestParam String email,  @io.swagger.v3.oas.annotations.parameters.RequestBody(
+            content = @Content(
+                    mediaType = "application/json",
+                    schema = @Schema(example = "{\"password\":\"Masukan Password Terserah\"}")
+            )
+    ) @RequestBody Map<String, String> requestBody) {
         try {
             String password = requestBody.get("password");
             Users user = usersService.setPassword(email, password);
@@ -130,7 +142,12 @@ public class AuthController {
 
     @PostMapping("/reset-password-request")
     @CrossOrigin(origins = {"http://be-java-production.up.railway.app", "https://be-java-production.up.railway.app"})
-    public ResponseEntity<Object> requestResetPassword(@RequestBody UsersDTO usersDTO) {
+    public ResponseEntity<Object> requestResetPassword(@io.swagger.v3.oas.annotations.parameters.RequestBody(
+            content = @Content(
+                    mediaType = "application/json",
+                    schema = @Schema(example = "{\"email\":\"Masukan email sama seperti register\"}")
+            )
+    ) @RequestBody UsersDTO usersDTO) {
         String email = usersDTO.getEmail();
         try {
             resetPasswordService.updateResetPassword(email);
@@ -142,7 +159,12 @@ public class AuthController {
 
     @PostMapping("/reset-password")
     @CrossOrigin(origins = {"http://be-java-production.up.railway.app", "https://be-java-production.up.railway.app"})
-    public ResponseEntity<Object> resetPassword(@RequestParam String token, @RequestBody Map<String, String> requestBody) {
+    public ResponseEntity<Object> resetPassword(@RequestParam String token, @io.swagger.v3.oas.annotations.parameters.RequestBody(
+            content = @Content(
+                    mediaType = "application/json",
+                    schema = @Schema(example = "{\"newPassword\":\"Masukan Password Baru Terserah\"}")
+            )
+    ) @RequestBody Map<String, String> requestBody) {
         String newPassword = requestBody.get("newPassword");
 
         Users users = resetPasswordService.get(token);
