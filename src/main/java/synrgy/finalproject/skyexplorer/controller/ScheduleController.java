@@ -24,12 +24,18 @@ public class ScheduleController {
             @RequestParam UUID from,
             @RequestParam UUID to,
             @RequestParam String departure
-
             ){
         LocalDateTime timeDeparture = LocalDateTime.parse(departure);
         var schedules = scheduleService.getSchedules(new ScheduleDto(from, to, timeDeparture));
         return generatedResponse("schedules", schedules);
     }
+
+    @GetMapping
+    public ResponseEntity<?> getAllSchedules(){
+        var schedules = scheduleService.getAllSchedules();
+        return generatedResponse("schedules", schedules);
+    }
+
 
 //    @PostMapping
 //    public ResponseEntity<?> createSchedule(@RequestBody ScheduleDto scheduleDto){

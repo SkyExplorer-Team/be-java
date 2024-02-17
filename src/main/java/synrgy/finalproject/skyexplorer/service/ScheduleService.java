@@ -24,4 +24,8 @@ public class ScheduleService {
                 scheduleDto.timeDeparture(),
                 pageable);
     }
+
+    public List<Schedule> getAllSchedules() {
+        return scheduleRepository.findAll();
+    }
 }
