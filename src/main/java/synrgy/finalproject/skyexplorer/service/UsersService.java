@@ -13,10 +13,8 @@ import synrgy.finalproject.skyexplorer.repository.TravelDocumentRepository;
 import synrgy.finalproject.skyexplorer.repository.UsersRepository;
 
 import java.time.LocalDateTime;
-import java.util.Arrays;
 import java.util.Optional;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -201,6 +199,10 @@ public class UsersService {
 
     public Users findUserByEmail(String email) {
         return usersRepository.findByEmail(email);
+    }
+
+    public Optional<Users> findUserById(UUID id) {
+        return usersRepository.findById(id);
     }
 
     public void deleteUsers(Users users) {

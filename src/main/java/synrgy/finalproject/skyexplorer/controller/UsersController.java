@@ -33,10 +33,7 @@ import synrgy.finalproject.skyexplorer.service.UsersService;
 import synrgy.finalproject.skyexplorer.service.Validator;
 
 import java.security.Principal;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 @RestController
 @RequestMapping("/users")
@@ -88,6 +85,21 @@ public class UsersController {
         }
     }
 
+    @GetMapping("/personal/{id}")
+    public ResponseEntity<Object> getUsers(@PathVariable UUID id) {
+        try {
+            Optional<Users> optionalUser = usersService.findUserById(id);
+            if (optionalUser.isPresent()) {
+                Users user = optionalUser.get();
+                return SuccessResponse.generateResponse("success", "User has been successfully.", user, HttpStatus.OK);
+            } else {
+                return SuccessResponse.generateResponse("error", "User not found.", null, HttpStatus.NOT_FOUND);
+            }
+        } catch (Exception e) {
+            return SuccessResponse.generateResponse("error", e.getMessage(), null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
     @PatchMapping("/document/{id}")
     public ResponseEntity<Object> updateDocument(@PathVariable UUID id, @RequestBody TravelDocumentDTO userDocument) {
         try {
@@ -102,4 +114,15 @@ public class UsersController {
             return SuccessResponse.generateResponse("error", e.getMessage(), null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
+    @GetMapping("/{userId}/travel-document")
+    public ResponseEntity<Object> getTravelDocumentByUserId(@PathVariable UUID userId) {
+        Optional<TravelDocument> optionalTravelDocument = travelDocumentService.getTravelDocumentByUserId(userId);
+        if (optionalTravelDocument.isPresent()) {
+            return SuccessResponse.generateResponse("success", "Document has been successfully.", optionalTravelDocument, HttpStatus.OK);
+        } else {
+            return SuccessResponse.generateResponse("error", "Document not found.", null, HttpStatus.NOT_FOUND);
+        }
+    }
+
 }
