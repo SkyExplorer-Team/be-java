@@ -150,8 +150,9 @@ public class AuthController {
     ) @RequestBody UsersDTO usersDTO) {
         String email = usersDTO.getEmail();
         try {
-            resetPasswordService.updateResetPassword(email);
-            return SuccessResponse.generateResponse("succes", "Link reset password telah dikirim ke email Anda. Silakan periksa inbox Anda.", email, HttpStatus.OK);
+            String resetPasswordToken = resetPasswordService.updateResetPassword(email);
+            String resetPasswordUrl = "https://be-java-production.up.railway.app/reset-password?token=" + resetPasswordToken;
+            return SuccessResponse.generateResponse("succes", "Link reset password telah dikirim ke email Anda. Silakan periksa inbox Anda.", resetPasswordUrl, HttpStatus.OK);
         } catch (UsersNotFoundException e) {
             return SuccessResponse.generateResponse("error", e.getMessage(), null, HttpStatus.INTERNAL_SERVER_ERROR);
         }

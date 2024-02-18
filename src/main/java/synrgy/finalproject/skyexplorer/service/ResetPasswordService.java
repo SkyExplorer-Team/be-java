@@ -23,7 +23,7 @@ public class ResetPasswordService {
     @Autowired
     private UsersRepository usersRepository;
 
-    public void updateResetPassword(String email) throws UsersNotFoundException {
+    public String updateResetPassword(String email) throws UsersNotFoundException {
         Users users = usersRepository.findByEmail(email);
 
         if (users != null) {
@@ -33,6 +33,8 @@ public class ResetPasswordService {
 
             // Kirim email reset password
             emailService.sendResetPasswordEmail(users.getEmail(), resetPasswordToken);
+
+            return resetPasswordToken;
         } else {
             throw new UsersNotFoundException("Tidak dapat menemukan pengguna dengan email " + email);
         }
