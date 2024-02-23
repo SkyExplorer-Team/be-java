@@ -25,8 +25,8 @@ public class SwaggerConfig {
                         .title("Sky Explorer REST API")
                         .description("Dokumentasi Rest API Skyexplorer everybody")
                         .version("1.0").contact(new Contact().name("Ersalomo and team skyexplorer")
-                                .email( "www.baeldung.com").url("ersalomo2002@gmail.com"))
-                        .license(new License().name("License of API").url("API license URL")));
+                                .email("ersalomo2002@gmail.com").url("https://example.com"))
+                        .license(new License().name("License of API").url("https://example.com")));
     }
     private SecurityScheme createAPIKeyScheme() {
         return new SecurityScheme()
